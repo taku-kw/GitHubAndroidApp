@@ -5,11 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubandroidapp.R
+import com.example.githubandroidapp.viewmodel.UserListViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class UserListFragment : Fragment() {
+
+    private val model: UserListViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,5 +37,10 @@ class UserListFragment : Fragment() {
                 LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
             adapter = userListAdapter
         }
+
+        model.userList.observe(viewLifecycleOwner, Observer { list ->
+            val tempAdapter = userListView.adapter as UserListAdapter
+            tempAdapter.setUserList(list)
+        })
     }
 }

@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.githubandroidapp">
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
+        android:name=".GithubAndroidApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -14,7 +16,7 @@
         android:theme="@style/Theme.GitHubAndroidApp"
         tools:targetApi="31">
         <activity
-            android:name=".view.main.MainActivity"
+            android:name="com.example.githubandroidapp.view.main.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

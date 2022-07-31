@@ -1,4 +1,7 @@
 package com.example.githubandroidapp.data
 
-class User {
-}
+data class User(
+    val name: String,
+    val avatarUrl: String,
+    val repositoryUrl: String,
+)
