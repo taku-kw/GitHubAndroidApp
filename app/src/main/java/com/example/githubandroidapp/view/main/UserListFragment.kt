@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubandroidapp.R
+import com.example.githubandroidapp.view.common.Loading
 import com.example.githubandroidapp.viewmodel.UserListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -30,17 +31,36 @@ class UserListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val userListView = view.findViewById<RecyclerView>(R.id.userList)
-        val userListAdapter = UserListAdapter(view.context, listOf())
+        val userListAdapter = UserListAdapter(mutableListOf())
 
         userListView.apply {
-            layoutManager =
-                LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
+            val linearLayoutManager = LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
+            layoutManager = linearLayoutManager
             adapter = userListAdapter
+            addOnScrollListener(UserListScrollListener(linearLayoutManager, this.adapter as UserListAdapter) {
+                model.searchNextUser()
+            })
         }
 
-        model.userList.observe(viewLifecycleOwner, Observer { list ->
+        model.userList.observe(viewLifecycleOwner) { list ->
             val tempAdapter = userListView.adapter as UserListAdapter
             tempAdapter.setUserList(list)
-        })
+        }
+
+        Loading.setContext(view.context)
+
+        model.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            if (isLoading) {
+                Loading.show()
+            } else {
+                Loading.dismiss()
+            }
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        Loading.clearContext()
     }
 }

@@ -17,24 +17,43 @@ class UserListViewModel @Inject constructor(
 ) : ViewModel() {
 
     val userList = MutableLiveData<MutableList<User>>(mutableListOf())
+    val isLoading = MutableLiveData(false)
 
     private var searchWord = ""
     private var page = 0
     private val perPage = 20
     private var totalCount = 0
 
-    fun searchUser(searchWord: String, page: Int = 1) {
+    fun searchUser(searchWord: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val data = githubRepository.getUserList(searchWord, page, perPage)
-                userList.postValue(data.list.toMutableList())
+            isLoading.postValue(true)
+            commonSearchUser(searchWord)
+            isLoading.postValue(false)
+        }
+    }
 
-                this@UserListViewModel.searchWord = searchWord
-                this@UserListViewModel.page = page
-                this@UserListViewModel.totalCount = data.totalCount
-            } catch (e: Exception) {
-                Log.w("UserListViewModel.searchUser($searchWord, $page)", e.toString())
+    fun searchNextUser() {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (++page * perPage < totalCount) {
+                commonSearchUser(searchWord, page, userList.value!!)
             }
+        }
+    }
+
+    private suspend fun commonSearchUser(
+        searchWord: String,
+        page: Int = 1,
+        existingUserList: MutableList<User> = mutableListOf(),
+    ) {
+        try {
+            val data = githubRepository.getUserList(searchWord, page, perPage)
+            userList.postValue((existingUserList + data.list).toMutableList())
+
+            this@UserListViewModel.searchWord = searchWord
+            this@UserListViewModel.page = page
+            this@UserListViewModel.totalCount = data.totalCount
+        } catch (e: Exception) {
+            Log.w("UserListViewModel.searchUser($searchWord, $page)", e.toString())
         }
     }
 }
