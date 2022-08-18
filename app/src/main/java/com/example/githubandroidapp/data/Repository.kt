@@ -5,4 +5,5 @@ data class Repository(
     val developLanguage: String?,
     val starNum: Int,
     val description: String?,
+    val fork: Boolean,
 )

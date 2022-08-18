@@ -45,7 +45,7 @@ class UserRepositoryViewModel @Inject constructor(
     private suspend fun searchRepository(userName: String) {
         try {
             val data = githubRepository.getRepositoryList(userName)
-            repositoryList.postValue(data)
+            repositoryList.postValue(data.filter { !it.fork })
         } catch (e: Exception) {
             Log.w("UserRepositoryViewModel.searchUserRepository(userName=$userName)", e.toString())
         }

@@ -68,6 +68,7 @@ class GithubRepositoryImpl @Inject constructor(private val githubApi: GithubApi)
                     it.language,
                     it.stargazers_count,
                     it.description,
+                    it.fork,
                 )
             )
         }
