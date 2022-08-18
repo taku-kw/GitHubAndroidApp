@@ -1,7 +1,9 @@
 package com.example.githubandroidapp.repository
 
 import com.example.githubandroidapp.api.GithubApi
+import com.example.githubandroidapp.data.Repository
 import com.example.githubandroidapp.data.User
+import com.example.githubandroidapp.data.UserDetail
 import com.example.githubandroidapp.data.UserList
 import javax.inject.Inject
 
@@ -11,6 +13,14 @@ interface GithubRepository {
         page: Int,
         perPage: Int,
     ): UserList
+
+    suspend fun getUser(
+        userName: String,
+    ): UserDetail
+
+    suspend fun getRepositoryList(
+        userName: String,
+    ): List<Repository>
 }
 
 class GithubRepositoryImpl @Inject constructor(private val githubApi: GithubApi) :
@@ -32,5 +42,36 @@ class GithubRepositoryImpl @Inject constructor(private val githubApi: GithubApi)
         }
 
         return UserList(response.total_count, userList)
+    }
+
+    override suspend fun getUser(userName: String): UserDetail {
+        val response = githubApi.getUser(userName)
+
+        return UserDetail(
+            response.login,
+            response.name,
+            response.avatar_url,
+            response.followers,
+            response.following,
+        )
+    }
+
+    override suspend fun getRepositoryList(userName: String): List<Repository> {
+        val repositoryList = mutableListOf<Repository>()
+
+        val response = githubApi.getRepositoryList(userName)
+
+        response.forEach {
+            repositoryList.add(
+                Repository(
+                    it.name,
+                    it.language,
+                    it.stargazers_count,
+                    it.description,
+                )
+            )
+        }
+
+        return repositoryList
     }
 }

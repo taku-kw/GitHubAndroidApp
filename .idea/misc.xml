@@ -13,6 +13,10 @@
         <entry key="..\:/Users/kawamoto/AndroidStudioProjects/GitHubAndroidApp/app/src/main/res/layouts/main/layout/fragment_search_form.xml" value="0.33" />
         <entry key="..\:/Users/kawamoto/AndroidStudioProjects/GitHubAndroidApp/app/src/main/res/layouts/main/layout/fragment_user_list.xml" value="0.358695652173913" />
         <entry key="..\:/Users/kawamoto/AndroidStudioProjects/GitHubAndroidApp/app/src/main/res/layouts/main/layout/fragment_user_list_item.xml" value="0.358695652173913" />
+        <entry key="..\:/Users/kawamoto/AndroidStudioProjects/GitHubAndroidApp/app/src/main/res/layouts/user_repository/layout/fragment_user_info.xml" value="0.358695652173913" />
+        <entry key="..\:/Users/kawamoto/AndroidStudioProjects/GitHubAndroidApp/app/src/main/res/layouts/user_repository/layout/fragment_user_repository.xml" value="0.358695652173913" />
+        <entry key="..\:/Users/kawamoto/AndroidStudioProjects/GitHubAndroidApp/app/src/main/res/layouts/user_repository/layout/fragment_user_repository_list.xml" value="0.358695652173913" />
+        <entry key="..\:/Users/kawamoto/AndroidStudioProjects/GitHubAndroidApp/app/src/main/res/layouts/user_repository/layout/fragment_user_repository_list_item.xml" value="0.358695652173913" />
       </map>
     </option>
   </component>

@@ -17,7 +17,7 @@ class UserListViewModel @Inject constructor(
 ) : ViewModel() {
 
     val userList = MutableLiveData<MutableList<User>>(mutableListOf())
-    val isLoading = MutableLiveData(false)
+    val isLoading = MutableLiveData<Boolean>()
 
     private var searchWord = ""
     private var page = 0
@@ -38,6 +38,10 @@ class UserListViewModel @Inject constructor(
                 commonSearchUser(searchWord, page, userList.value!!)
             }
         }
+    }
+
+    fun reset() {
+        userList.postValue(mutableListOf())
     }
 
     private suspend fun commonSearchUser(

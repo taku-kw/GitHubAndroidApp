@@ -6,11 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubandroidapp.R
+import com.example.githubandroidapp.data.User
 import com.example.githubandroidapp.view.common.Loading
+import com.example.githubandroidapp.view.user_repository.UserRepositoryFragment
 import com.example.githubandroidapp.viewmodel.UserListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -32,6 +33,16 @@ class UserListFragment : Fragment() {
 
         val userListView = view.findViewById<RecyclerView>(R.id.userList)
         val userListAdapter = UserListAdapter(mutableListOf())
+        userListAdapter.setOnItemClickListener(
+            object : UserListAdapter.OnItemClickListener {
+                override fun onItemClick(user: User) {
+                    parentFragment!!.parentFragmentManager.beginTransaction()
+                        .replace(R.id.mainFragmentContainerView, UserRepositoryFragment.newInstance(user.name))
+                        .addToBackStack(null)
+                        .commit()
+                }
+            }
+        )
 
         userListView.apply {
             val linearLayoutManager = LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
@@ -56,11 +67,5 @@ class UserListFragment : Fragment() {
                 Loading.dismiss()
             }
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-
-        Loading.clearContext()
     }
 }

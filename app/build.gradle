@@ -40,7 +40,11 @@ android {
                             'src/main/res',
                             'src/main/res/layouts/common',
                             'src/main/res/layouts/main',
+                            'src/main/res/layouts/user_repository',
                     ]
+            assets {
+                srcDirs 'src\\main\\assets', 'src\\main\\res\\drawable\\assets'
+            }
         }
     }
 }

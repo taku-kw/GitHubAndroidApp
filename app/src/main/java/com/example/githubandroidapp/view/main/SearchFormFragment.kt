@@ -40,6 +40,7 @@ class SearchFormFragment : Fragment() {
                     searchForm.windowToken,
                     InputMethodManager.RESULT_UNCHANGED_SHOWN
                 )
+                model.reset()
                 model.searchUser(searchForm.text.toString())
                 return@setOnKeyListener true
             }

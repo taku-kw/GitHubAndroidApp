@@ -29,6 +29,12 @@ class UserListAdapter(private var userList: MutableList<UserView>) :
 
     class LoadingViewHolder(view: View) : RecyclerView.ViewHolder(view) {}
 
+    private lateinit var clickListener: OnItemClickListener
+
+    interface OnItemClickListener {
+        fun onItemClick(user: User)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == ViewType.VIEW_TYPE_DATA.ordinal) {
             val view = LayoutInflater.from(parent.context)
@@ -46,6 +52,10 @@ class UserListAdapter(private var userList: MutableList<UserView>) :
             val user = userList[position].user
             holder.avatarImage.load(Uri.parse(user.avatarUrl))
             holder.userName.text = user.name
+
+            holder.itemView.setOnClickListener {
+                clickListener.onItemClick(user)
+            }
         }
     }
 
@@ -68,6 +78,10 @@ class UserListAdapter(private var userList: MutableList<UserView>) :
     fun removeLoadingView() {
         this.userList.removeLast()
         notifyItemRemoved(this.userList.size)
+    }
+
+    fun setOnItemClickListener(listener: OnItemClickListener) {
+        this.clickListener = listener
     }
 
     private fun convUserViewList(userList: List<User>) : MutableList<UserView> {
