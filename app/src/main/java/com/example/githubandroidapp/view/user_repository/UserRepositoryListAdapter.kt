@@ -31,6 +31,12 @@ class UserRepositoryListAdapter(private val context: Context, private var reposi
             }
         }
 
+    private lateinit var clickListener: OnItemClickListener
+
+    interface OnItemClickListener {
+        fun onItemClick(repo: Repository)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.fragment_user_repository_list_item, parent, false)
@@ -45,6 +51,10 @@ class UserRepositoryListAdapter(private val context: Context, private var reposi
             holder.starImg.setImageBitmap(getBitmapFromAssets("star.jpg"))
             holder.starNum.text = repo.starNum.toString()
             holder.description.text = repo.description
+
+            holder.itemView.setOnClickListener {
+                clickListener.onItemClick(repo)
+            }
         }
     }
 
@@ -53,6 +63,10 @@ class UserRepositoryListAdapter(private val context: Context, private var reposi
     fun setRepositoryList(repositoryList: List<Repository>) {
         this.repositoryList = repositoryList.toMutableList()
         notifyDataSetChanged()
+    }
+
+    fun setOnItemClickListener(listener: UserRepositoryListAdapter.OnItemClickListener) {
+        this.clickListener = listener
     }
 
     private fun getBitmapFromAssets(path: String) : Bitmap {
