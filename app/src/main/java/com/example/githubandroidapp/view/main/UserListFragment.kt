@@ -68,4 +68,10 @@ class UserListFragment : Fragment() {
             }
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+
+        Loading.setContext(view!!.context)
+    }
 }
