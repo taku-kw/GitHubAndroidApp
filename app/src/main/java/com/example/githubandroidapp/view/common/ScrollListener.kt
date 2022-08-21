@@ -1,14 +1,13 @@
-package com.example.githubandroidapp.view.main
+package com.example.githubandroidapp.view.common
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-class UserListScrollListener(
+class ScrollListener(
     private val layoutManager: LinearLayoutManager,
-    private val adapter: UserListAdapter,
+    private val adapter: ScrollAdapter,
     val getNextPageFunction: () -> Unit,
-    ) : RecyclerView.OnScrollListener() {
-
+) : RecyclerView.OnScrollListener() {
     private var previousTotal = 0
     private var loading = true
     private var visibleThreshold = 2

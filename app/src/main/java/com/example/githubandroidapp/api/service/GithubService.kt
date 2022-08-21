@@ -25,5 +25,7 @@ interface GithubService {
     @GET("/users/{user_name}/repos")
     fun getRepositoryList(
         @Path("user_name") userName: String,
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int,
     ) : Call<List<GetRepositoryList>>
 }

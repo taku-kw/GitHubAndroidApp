@@ -11,9 +11,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubandroidapp.R
 import com.example.githubandroidapp.data.Repository
+import com.example.githubandroidapp.data.RepositoryView
+import com.example.githubandroidapp.data.repositoryLoadingView
+import com.example.githubandroidapp.enum.ViewType
+import com.example.githubandroidapp.view.common.ScrollAdapter
 
-class UserRepositoryListAdapter(private val context: Context, private var repositoryList: MutableList<Repository>) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class UserRepositoryListAdapter(private val context: Context, private var repositoryList: MutableList<RepositoryView>) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>(), ScrollAdapter {
 
         class DataViewHolder(view: View): RecyclerView.ViewHolder(view) {
             val repositoryName: TextView
@@ -31,6 +35,8 @@ class UserRepositoryListAdapter(private val context: Context, private var reposi
             }
         }
 
+    class LoadingViewHolder(view: View) : RecyclerView.ViewHolder(view)
+
     private lateinit var clickListener: OnItemClickListener
 
     interface OnItemClickListener {
@@ -38,14 +44,20 @@ class UserRepositoryListAdapter(private val context: Context, private var reposi
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.fragment_user_repository_list_item, parent, false)
-        return DataViewHolder(view)
+        return if (viewType == ViewType.VIEW_TYPE_DATA.ordinal) {
+            val view = LayoutInflater.from(parent.context)
+                .inflate(R.layout.fragment_user_repository_list_item, parent, false)
+            DataViewHolder(view)
+        } else {
+            val view = LayoutInflater.from(parent.context)
+                .inflate(R.layout.loading_list_item, parent, false)
+            LoadingViewHolder(view)
+        }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is DataViewHolder) {
-            val repo = repositoryList[position]
+            val repo = repositoryList[position].repository
             holder.repositoryName.text = repo.name
             holder.developLanguage.text = repo.developLanguage
             holder.starImg.setImageBitmap(getBitmapFromAssets("star.jpg"))
@@ -60,8 +72,12 @@ class UserRepositoryListAdapter(private val context: Context, private var reposi
 
     override fun getItemCount(): Int = repositoryList.size
 
+    override fun getItemViewType(position: Int): Int {
+        return repositoryList[position].viewType.ordinal
+    }
+
     fun setRepositoryList(repositoryList: List<Repository>) {
-        this.repositoryList = repositoryList.toMutableList()
+        this.repositoryList = convRepositoryViewList(repositoryList)
         notifyDataSetChanged()
     }
 
@@ -69,8 +85,30 @@ class UserRepositoryListAdapter(private val context: Context, private var reposi
         this.clickListener = listener
     }
 
+    override fun addLoadingView() {
+        this.repositoryList.add(repositoryLoadingView)
+        notifyItemInserted(this.repositoryList.size - 1)
+    }
+
+    override fun removeLoadingView() {
+        this.repositoryList.removeLast()
+        notifyItemRemoved(this.repositoryList.size)
+    }
+
     private fun getBitmapFromAssets(path: String) : Bitmap {
         val inputStream = context.assets.open(path)
         return BitmapFactory.decodeStream(inputStream)
+    }
+
+    private fun convRepositoryViewList(repositoryList: List<Repository>) : MutableList<RepositoryView> {
+        val repositoryViewList = mutableListOf<RepositoryView>()
+
+        repositoryList.forEach { repo ->
+            repositoryViewList.add(
+                RepositoryView(repo, ViewType.VIEW_TYPE_DATA)
+            )
+        }
+
+        return repositoryViewList
     }
 }

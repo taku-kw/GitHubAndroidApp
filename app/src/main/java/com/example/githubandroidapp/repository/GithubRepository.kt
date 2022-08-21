@@ -20,6 +20,8 @@ interface GithubRepository {
 
     suspend fun getRepositoryList(
         userName: String,
+        page: Int,
+        perPage: Int,
     ): List<Repository>
 }
 
@@ -56,10 +58,14 @@ class GithubRepositoryImpl @Inject constructor(private val githubApi: GithubApi)
         )
     }
 
-    override suspend fun getRepositoryList(userName: String): List<Repository> {
+    override suspend fun getRepositoryList(
+        userName: String,
+        page: Int,
+        perPage: Int,
+    ): List<Repository> {
         val repositoryList = mutableListOf<Repository>()
 
-        val response = githubApi.getRepositoryList(userName)
+        val response = githubApi.getRepositoryList(userName, page, perPage)
 
         response.forEach {
             repositoryList.add(

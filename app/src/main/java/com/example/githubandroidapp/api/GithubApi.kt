@@ -4,7 +4,6 @@ import com.example.githubandroidapp.api.service.GithubService
 import com.example.githubandroidapp.data.api.getRepositoryList.response.GetRepositoryList
 import com.example.githubandroidapp.data.api.getUser.response.GetUserResponse
 import com.example.githubandroidapp.data.api.getUserList.response.GetUserListResponse
-import java.lang.Exception
 import javax.inject.Inject
 
 interface GithubApi {
@@ -20,6 +19,8 @@ interface GithubApi {
 
     suspend fun getRepositoryList(
         userName: String,
+        page: Int,
+        perPage: Int,
     ): List<GetRepositoryList>
 }
 
@@ -44,9 +45,11 @@ class GithubApiImpl @Inject constructor(
     }
 
     override suspend fun getRepositoryList(
-        userName: String
+        userName: String,
+        page: Int,
+        perPage: Int,
     ): List<GetRepositoryList> {
-        return apiCall(service.getRepositoryList(userName)).body()
+        return apiCall(service.getRepositoryList(userName, page, perPage)).body()
             ?: throw Exception("Response Body is null")
     }
 }

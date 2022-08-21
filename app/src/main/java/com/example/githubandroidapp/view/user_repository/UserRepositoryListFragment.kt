@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubandroidapp.R
 import com.example.githubandroidapp.data.Repository
+import com.example.githubandroidapp.view.common.ScrollListener
 import com.example.githubandroidapp.viewmodel.UserRepositoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -46,6 +47,9 @@ class UserRepositoryListFragment : Fragment() {
             val linearLayoutManager = LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
             layoutManager = linearLayoutManager
             adapter = repositoryListAdapter
+            addOnScrollListener(ScrollListener(linearLayoutManager, this.adapter as UserRepositoryListAdapter) {
+                model.searchNextRepository()
+            })
         }
 
         model.repositoryList.observe(viewLifecycleOwner) { list ->

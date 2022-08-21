@@ -12,10 +12,11 @@ import com.example.githubandroidapp.data.User
 import com.example.githubandroidapp.data.UserView
 import com.example.githubandroidapp.data.userLoadingView
 import com.example.githubandroidapp.enum.ViewType
+import com.example.githubandroidapp.view.common.ScrollAdapter
 import de.hdodenhof.circleimageview.CircleImageView
 
 class UserListAdapter(private var userList: MutableList<UserView>) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    RecyclerView.Adapter<RecyclerView.ViewHolder>(), ScrollAdapter {
 
     class DataViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val avatarImage: CircleImageView
@@ -70,12 +71,12 @@ class UserListAdapter(private var userList: MutableList<UserView>) :
         notifyDataSetChanged()
     }
 
-    fun addLoadingView() {
+    override fun addLoadingView() {
         this.userList.add(userLoadingView)
         notifyItemInserted(this.userList.size - 1)
     }
 
-    fun removeLoadingView() {
+    override fun removeLoadingView() {
         this.userList.removeLast()
         notifyItemRemoved(this.userList.size)
     }

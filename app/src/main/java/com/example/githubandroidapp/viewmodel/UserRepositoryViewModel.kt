@@ -22,8 +22,14 @@ class UserRepositoryViewModel @Inject constructor(
     val repositoryList = MutableLiveData<List<Repository>>(mutableListOf())
     val isLoading = MutableLiveData(false)
 
+    private var searchUserName = ""
+    private var page = 0
+    private val perPage = 20
+
     fun openPage(userName: String) {
         viewModelScope.launch(Dispatchers.IO) {
+            page = 1
+            searchUserName = userName
             isLoading.postValue(true)
             val jobSearchUserDetail = async { searchUserDetail(userName) }
             val jobSearchRepository = async { searchRepository(userName) }
@@ -42,12 +48,24 @@ class UserRepositoryViewModel @Inject constructor(
         }
     }
 
-    private suspend fun searchRepository(userName: String) {
+    private suspend fun searchRepository(userName: String, page:Int = this.page): Int {
+        var dataNum = 0
         try {
-            val data = githubRepository.getRepositoryList(userName)
+            val data = githubRepository.getRepositoryList(userName, page, perPage)
             repositoryList.postValue(data.filter { !it.fork })
+            dataNum = data.size
         } catch (e: Exception) {
             Log.w("UserRepositoryViewModel.searchUserRepository(userName=$userName)", e.toString())
+        }
+        return dataNum
+    }
+
+    fun searchNextRepository() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val dataNum = searchRepository(searchUserName, page + 1)
+            if (dataNum > 0) {
+                page++
+            }
         }
     }
 }

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.githubandroidapp.R
 import com.example.githubandroidapp.data.User
 import com.example.githubandroidapp.view.common.Loading
+import com.example.githubandroidapp.view.common.ScrollListener
 import com.example.githubandroidapp.view.user_repository.UserRepositoryFragment
 import com.example.githubandroidapp.viewmodel.UserListViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -48,7 +49,7 @@ class UserListFragment : Fragment() {
             val linearLayoutManager = LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
             layoutManager = linearLayoutManager
             adapter = userListAdapter
-            addOnScrollListener(UserListScrollListener(linearLayoutManager, this.adapter as UserListAdapter) {
+            addOnScrollListener(ScrollListener(linearLayoutManager, this.adapter as UserListAdapter) {
                 model.searchNextUser()
             })
         }
